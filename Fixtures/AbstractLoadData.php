@@ -1,6 +1,6 @@
 <?php
 
-namespace TestUtil\Fixtures;
+namespace Cethyworks\FixtureTestUtil\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;

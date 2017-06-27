@@ -1,6 +1,6 @@
 <?php
 
-namespace Cethyworks\TestUtil;
+namespace Cethyworks\FixtureTestUtil;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;

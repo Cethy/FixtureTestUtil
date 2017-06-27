@@ -1,6 +1,6 @@
 <?php
 
-namespace TestUtil\Helper;
+namespace Cethyworks\FixtureTestUtil\Helper;
 
 /**
  * Shortcut to create Repository Mock object

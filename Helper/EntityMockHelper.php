@@ -1,5 +1,5 @@
 <?php
-namespace TestUtil\Helper;
+namespace Cethyworks\FixtureTestUtil\Helper;
 
 /**
  * Shortcut returning mocked entities with id usable

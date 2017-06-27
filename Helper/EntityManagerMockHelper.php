@@ -1,5 +1,5 @@
 <?php
-namespace TestUtil\Helper;
+namespace Cethyworks\FixtureTestUtil\Helper;
 
 use Doctrine\ORM\EntityManager;
 
