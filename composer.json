@@ -1,0 +1,21 @@
+{
+    "name": "cethyworks/test-util",
+    "license": "MIT",
+    "description": "Tools for symfony/doctrine phpunit testing",
+    "type": "library",
+    "require": {
+        "php": ">=5.5.9",
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
+        "doctrine/orm": "^2.5",
+        "phpunit/phpunit": "^4.8"
+    },
+    "authors": [
+        {
+            "name": "Charles-Elie",
+            "email": "charles-elie@cethyworks.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Cethyworks\\TestUtil\\": "" }
+    }
+}
