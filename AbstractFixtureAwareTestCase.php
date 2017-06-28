@@ -11,7 +11,10 @@ use Symfony\Bridge\Doctrine\DataFixtures\ContainerAwareLoader;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Add Fixture awareness & handling to WebTestCase
+ * Useful for testing with data fixtures
+ *
+ * Provides fixture loading & awareness.
+ * Extends WebTestCase.
  */
 abstract class AbstractFixtureAwareTestCase extends WebTestCase
 {
@@ -35,6 +38,34 @@ abstract class AbstractFixtureAwareTestCase extends WebTestCase
      */
     private $entityManager;
 
+
+    /**
+     * Load Fixtures
+     */
+    public function setUp()
+    {
+        self::bootKernel();
+
+        foreach($this->getFixturesInstances() as $fixturesInstance) {
+            $this->addFixture($fixturesInstance);
+        }
+
+        $this->executeFixtures();
+    }
+
+    /**
+     * Must return an array of all the fixture instances needed for the current test
+     *
+     * @return FixtureInterface[]
+     */
+    abstract protected function getFixturesInstances();
+
+
+    /**
+     * Return the EntityManager
+     *
+     * @return EntityManager
+     */
     protected function getEntityManager()
     {
         if(!$this->entityManager) {
@@ -42,6 +73,45 @@ abstract class AbstractFixtureAwareTestCase extends WebTestCase
         }
 
         return $this->entityManager;
+    }
+
+    /**
+     * Adds a new fixture to be loaded.
+     *
+     * @param FixtureInterface $fixture
+     */
+    protected function addFixture(FixtureInterface $fixture)
+    {
+        $this->getFixtureLoader()->addFixture($fixture);
+    }
+
+    /**
+     * Return an entity from its fixture reference
+     *
+     * @param string $name
+     * @return object
+     */
+    protected function getFixtureReference($name)
+    {
+        if(!$this->referenceRepository) {
+            $this->referenceRepository = $this->getFixtureExecutor()->getReferenceRepository();
+        }
+        return $this->referenceRepository->getReference($name);
+    }
+
+
+    /**
+     * Executes all the fixtures that have been loaded so far.
+     */
+    private function executeFixtures()
+    {
+        // remove foreign key checks
+        $this->getEntityManager()->getConnection()->query(sprintf('SET FOREIGN_KEY_CHECKS=0'));
+
+        $this->getFixtureExecutor()->execute($this->getFixtureLoader()->getFixtures());
+
+        // put back foreign key checks
+        $this->getEntityManager()->getConnection()->query(sprintf('SET FOREIGN_KEY_CHECKS=1'));
     }
 
     /**
@@ -67,47 +137,5 @@ abstract class AbstractFixtureAwareTestCase extends WebTestCase
             $this->fixtureLoader = new ContainerAwareLoader(self::$kernel->getContainer());
         }
         return $this->fixtureLoader;
-    }
-
-    public function setUp()
-    {
-        self::bootKernel();
-    }
-
-    /**
-     * Adds a new fixture to be loaded.
-     *
-     * @param FixtureInterface $fixture
-     */
-    protected function addFixture(FixtureInterface $fixture)
-    {
-        $this->getFixtureLoader()->addFixture($fixture);
-    }
-
-
-    /**
-     * Executes all the fixtures that have been loaded so far.
-     */
-    protected function executeFixtures()
-    {
-        // remove foreign key checks
-        $this->getEntityManager()->getConnection()->query(sprintf('SET FOREIGN_KEY_CHECKS=0'));
-
-        $this->getFixtureExecutor()->execute($this->getFixtureLoader()->getFixtures());
-
-        // put back foreign key checks
-        $this->getEntityManager()->getConnection()->query(sprintf('SET FOREIGN_KEY_CHECKS=1'));
-    }
-
-    /**
-     * @param string $name
-     * @return object
-     */
-    protected function getFixtureReference($name)
-    {
-        if(!$this->referenceRepository) {
-            $this->referenceRepository = $this->getFixtureExecutor()->getReferenceRepository();
-        }
-        return $this->referenceRepository->getReference($name);
     }
 }
