@@ -103,7 +103,7 @@ abstract class AbstractFixtureAwareTestCase extends WebTestCase
     /**
      * Executes all the fixtures that have been loaded so far.
      */
-    private function executeFixtures()
+    protected function executeFixtures()
     {
         // remove foreign key checks
         $this->getEntityManager()->getConnection()->query(sprintf('SET FOREIGN_KEY_CHECKS=0'));
